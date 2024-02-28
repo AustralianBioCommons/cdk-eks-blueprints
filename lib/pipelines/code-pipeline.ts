@@ -442,7 +442,7 @@ class CodePipeline {
             installCommands: [
               "n stable",
               "npm install -g aws-cdk@2.115.0",
-              `cd ${path} && npm install`,
+              `cd ${path} && npm run co:login && npm install`,
             ],
             commands: [
               `cd ${path}`,
