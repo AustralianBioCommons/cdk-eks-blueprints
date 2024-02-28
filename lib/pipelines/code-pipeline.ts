@@ -436,20 +436,24 @@ class CodePipeline {
         const path = props.repository.path ?? "./";
 
         return new cdkpipelines.CodePipeline(scope, props.name, {
-            pipelineName: props.name,
-            synth: new cdkpipelines.ShellStep(`${props.name}-synth`, {
-              input: codePipelineSource,
-              installCommands: [
-                'n stable',
-                'npm install -g aws-cdk@2.115.0',
-                `cd ${path} && npm install`,
-              ],
-              commands: [`cd ${path}`, 'npm run build', 'npx cdk synth ' + app]
-            }),
-            crossAccountKeys: props.crossAccountKeys,
-            codeBuildDefaults: {
-                rolePolicy: props.codeBuildPolicies
-            }
-          });
+          pipelineName: props.name,
+          synth: new cdkpipelines.ShellStep(`${props.name}-synth`, {
+            input: codePipelineSource,
+            installCommands: [
+              "n stable",
+              "npm install -g aws-cdk@2.115.0",
+              `cd ${path} && npm install`,
+            ],
+            commands: [
+              `cd ${path}`,
+              "npm run co:login && npm run build",
+              "npx cdk synth " + app,
+            ],
+          }),
+          crossAccountKeys: props.crossAccountKeys,
+          codeBuildDefaults: {
+            rolePolicy: props.codeBuildPolicies,
+          },
+        });
     }
 }
